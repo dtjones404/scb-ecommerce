@@ -5,3 +5,4 @@ uwsgi
 SQLAlchemy
 bcrypt
 webargs
+psycopg2
