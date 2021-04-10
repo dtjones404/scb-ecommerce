@@ -1,0 +1,7 @@
+Flask
+Flask-JWT-Extended
+Flask-SQLAlchemy
+uwsgi
+SQLAlchemy
+bcrypt
+webargs
