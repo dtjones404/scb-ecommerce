@@ -1,4 +1,4 @@
-from bcrypt import hashpw, checkpw, gensalt
+from bcrypt import checkpw
 from webargs import fields, validate
 
 from db import db
@@ -12,7 +12,7 @@ class UserModel(db.Model):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = hashpw(password.encode(), gensalt())
+        self.password = password
 
     def jsonify(self):
         return {"username": self.username}
@@ -30,7 +30,7 @@ class UserModel(db.Model):
         db.session.commit()
 
     def authenticate(self, password):
-        return checkpw(password.encode(), self.password)
+        return checkpw(password.encode(), self.password.encode())
 
 
 pw_regex = '^(?=\S{8,64}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^A-Za-z\s0-9])'

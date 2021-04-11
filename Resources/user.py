@@ -1,3 +1,4 @@
+from bcrypt import hashpw, gensalt
 from flask import Blueprint
 from flask_jwt_extended import create_access_token
 from webargs.flaskparser import use_kwargs
@@ -12,7 +13,7 @@ user_api = Blueprint('user_api', __name__)
 def register_user(**kwargs):
     if UserModel.get_by_username(kwargs['username']):
         return {"message": "Username already exists."}, 400
-    user = UserModel(**kwargs)
+    user = UserModel(kwargs['username'], hashpw(kwargs['password'].encode(), gensalt()).decode('utf8'))
     user.save_to_db()
     return {"message": "User registration successful."}, 201
 

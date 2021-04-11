@@ -10,7 +10,8 @@ from db import db
 from security import *
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL', "sqlite:///data.db")
+# replace method is a necessary compatability workaround. See commit.
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL', "sqlite:///data.db").replace('postgres://', 'postgresql://')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = get_secret()
 jwt = JWTManager(app)
