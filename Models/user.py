@@ -30,7 +30,7 @@ class UserModel(db.Model):
         db.session.commit()
 
     def authenticate(self, password):
-        return checkpw(password.encode(), self.password.encode())
+        return checkpw(password.encode('utf8'), self.password.encode('utf8'))
 
 
 pw_regex = '^(?=\S{8,64}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[^A-Za-z\s0-9])'
