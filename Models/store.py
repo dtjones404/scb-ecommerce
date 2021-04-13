@@ -26,7 +26,7 @@ class StoreModel(db.Model):
         return cls.query.filter_by(id=id).first()
 
     def jsonify(self):
-        return {"name": self.name, "items": {item.name: item.price for item in self.items}}
+        return {"id": self.id, "name": self.name, "items": {item.name: item.price for item in self.items}}
 
     def save_to_db(self):
         db.session.add(self)

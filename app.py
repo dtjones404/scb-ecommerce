@@ -13,6 +13,7 @@ app = Flask(__name__)
 # replace method is a necessary compatability workaround. See commit.
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL', "sqlite:///data.db").replace('postgres://', 'postgresql://')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config["JWT_SECRET_KEY"] = get_secret()
 jwt = JWTManager(app)
 db.init_app(app)

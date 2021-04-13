@@ -1,6 +1,6 @@
 from bcrypt import hashpw, gensalt
 from flask import Blueprint
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from webargs.flaskparser import use_kwargs
 
 from Models.user import *
@@ -25,3 +25,21 @@ def login_user(**kwargs):
     if user and user.authenticate(kwargs['password']):
         return {"jwt_token": create_access_token(user.id)}
     return {"message": "Invalid username or password."}, 401
+
+
+@user_api.route('/user/<string:username>', methods=['GET'])
+def get_user(username):
+    user = UserModel.get_by_username(username)
+    if not user:
+        return {"message": "User not found."}, 404
+    return user.jsonify()
+
+
+@user_api.route('/user/<string:username>', methods=['DELETE'])
+@jwt_required()
+def delete_user(username):
+    user = UserModel.get_by_username(username)
+    if not user:
+        return {"message": "User not found."}, 404
+    user.remove_from_db()
+    return {"message": "Delete successful."}
