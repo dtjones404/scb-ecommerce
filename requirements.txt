@@ -6,3 +6,4 @@ SQLAlchemy
 bcrypt
 webargs
 psycopg2
+redis
