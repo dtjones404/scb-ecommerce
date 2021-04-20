@@ -1,7 +1,11 @@
+from typing import Dict, Union
+
 from bcrypt import checkpw
 from webargs import fields, validate
 
 from db import db
+
+UserJson = Dict[str, Union[str, int]]
 
 
 class UserModel(db.Model):
@@ -10,26 +14,26 @@ class UserModel(db.Model):
     username = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(128))
 
-    def __init__(self, username, password):
+    def __init__(self, username: str, password: str) -> None:
         self.username = username
         self.password = password
 
-    def jsonify(self):
-        return {"username": self.username}
+    def jsonify(self) -> UserJson:
+        return {"id": self.id, "username": self.username}
 
     @classmethod
-    def get_by_username(cls, username):
+    def get_by_username(cls, username: str) -> "UserModel":
         return cls.query.filter_by(username=username).first()
 
-    def save_to_db(self):
+    def save_to_db(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def remove_from_db(self):
+    def remove_from_db(self) -> None:
         db.session.delete(self)
         db.session.commit()
 
-    def authenticate(self, password):
+    def authenticate(self, password: str) -> bool:
         return checkpw(password.encode('utf8'), self.password.encode('utf8'))
 
 

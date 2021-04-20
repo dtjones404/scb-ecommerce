@@ -13,7 +13,7 @@ def get_items():
 
 
 @item_api.route('/items/<string:item_name>', methods=['GET'])
-def get_item(item_name):
+def get_item(item_name: str):
     item = ItemModel.get_by_name(item_name)
     if item:
         return item.jsonify()
@@ -47,7 +47,7 @@ def put_item(**kwargs):
 
 @item_api.route('/items/<string:item_name>', methods=['DELETE'])
 @jwt_required()
-def delete_item(item_name):
+def delete_item(item_name: str):
     item = ItemModel.get_by_name(item_name)
     if not item:
         return {"message": "Item not found."}, 404

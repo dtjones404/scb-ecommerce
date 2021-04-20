@@ -1,7 +1,11 @@
+from typing import Dict, List, Union
+
 from webargs import fields
 
 from Models.store import StoreModel
 from db import db
+
+ItemJson = Dict[str, Union[str, float, int]]
 
 
 class ItemModel(db.Model):
@@ -13,27 +17,27 @@ class ItemModel(db.Model):
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'))
     store = db.relationship('StoreModel', back_populates='items')
 
-    def __init__(self, name, price, store_id):
+    def __init__(self, name: str, price: float, store_id: int) -> None:
         self.name = name
         self.price = price
         self.store_id = store_id
 
-    def jsonify(self):
+    def jsonify(self) -> ItemJson:
         return {"name": self.name, "price": self.price, "store": self.store.name}
 
     @classmethod
-    def get_all(cls):
-        return cls.query
+    def get_all(cls) -> List["ItemModel"]:
+        return cls.query.all()
 
     @classmethod
-    def get_by_name(cls, name):
+    def get_by_name(cls, name: str) -> "ItemModel":
         return cls.query.filter_by(name=name).first()
 
-    def save_to_db(self):
+    def save_to_db(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def remove_from_db(self):
+    def remove_from_db(self) -> None:
         db.session.delete(self)
         db.session.commit()
 

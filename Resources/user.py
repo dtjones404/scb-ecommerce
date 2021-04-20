@@ -19,7 +19,7 @@ def register_user(**kwargs):
 
 
 @user_api.route('/user/<string:username>', methods=['GET'])
-def get_user(username):
+def get_user(username: str):
     user = UserModel.get_by_username(username)
     if not user:
         return {"message": "User not found."}, 404
@@ -28,7 +28,7 @@ def get_user(username):
 
 @user_api.route('/user/<string:username>', methods=['DELETE'])
 @jwt_required(fresh=True)
-def delete_user(username):
+def delete_user(username: str):
     claims = get_jwt()
     user = UserModel.get_by_username(username)
     if user and (user.id == get_jwt_identity() or claims['is_admin']):

@@ -13,7 +13,7 @@ def get_stores():
 
 
 @store_api.route('/stores/<string:store_name>', methods=['GET'])
-def get_store(store_name):
+def get_store(store_name: str):
     store = StoreModel.get_by_name(store_name)
     if not store:
         return {"message": "Store not found."}, 404
@@ -32,7 +32,7 @@ def post_store(**kwargs):
 
 @store_api.route('/stores/<string:store_name>', methods=['DELETE'])
 @jwt_required()
-def delete_store(store_name):
+def delete_store(store_name: str):
     store = StoreModel.get_by_name(store_name)
     if not store:
         return {"message": "Store not found."}, 404
