@@ -9,14 +9,14 @@ from webargs.flaskparser import use_kwargs
 
 from Models.user import login_args, UserModel
 
-ACCESS_TOKEN_TTL = timedelta(minutes=5)  # hours=1 in production
+ACCESS_TOKEN_TTL = timedelta(minutes=1)  # hours=1 in production
 
 session_api = Blueprint('session_api', __name__)
 # urlparse is necessary to avoid Unicode error on Heroku.
 # see 'Connecting in Python', https://devcenter.heroku.com/articles/heroku-redis
 redis_url = urlparse(os.environ.get('REDIS_TLS_URL'))
 # Make sure redis is configured with AOF persistence in production!
-jwt_redis_blocklist = Redis(host=redis_url.hostname, port=redis_url.port, username=redis_url.username,
+jwt_redis_blacklist = Redis(host=redis_url.hostname, port=redis_url.port, username=redis_url.username,
                             password=redis_url.password, ssl=True, ssl_cert_reqs=None, decode_responses=True)
 
 
@@ -43,5 +43,5 @@ def refresh_jwt():
 @jwt_required()
 def logout():
     jti = get_jwt()['jti']
-    jwt_redis_blocklist.set(jti, "", ex=ACCESS_TOKEN_TTL)
+    jwt_redis_blacklist.set(jti, "", ex=ACCESS_TOKEN_TTL)
     return {"message": "Logout successful."}, 205
